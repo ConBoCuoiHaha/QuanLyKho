@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mvn wrapper:wrapper:*)",
+      "Bash(export PATH=\"$PATH:/c/Users/ADMIN/Desktop/IMS-react-master/apache-maven-3.9.11/bin\")",
+      "Bash(mvn:*)",
+      "Bash(\"/c/Users/ADMIN/Desktop/IMS-react-master/apache-maven-3.9.11/bin/mvn\" -version)",
+      "Bash(\"c:\\Users\\ADMIN\\Desktop\\IMS-react-master\\apache-maven-3.9.11-bin\\apache-maven-3.9.11\\bin\\mvn.cmd\" -version)",
+      "Bash(\"c:\\Users\\ADMIN\\Desktop\\IMS-react-master\\apache-maven-3.9.11-bin\\apache-maven-3.9.11\\bin\\mvn.cmd\" wrapper:wrapper)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

@@ -1,0 +1,3298 @@
+{
+  "info": {
+    "_postman_id": "7a542c8d-0fab-4c9c-b0f2-1f4d6acbf1ea",
+    "name": "IMS API Full Suite",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Đăng ký",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"{{register_name}}\",\n  \"email\": \"{{register_email}}\",\n  \"password\": \"{{register_password}}\",\n  \"phoneNumber\": \"{{register_phone}}\",\n  \"role\": \"{{register_role}}\"\n}"
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Đăng ký (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Đăng nhập",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{admin_email}}\",\n  \"password\": \"{{admin_password}}\"\n}"
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Dang nhap 200', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "const data = pm.response.json();",
+                  "if (data.token) { pm.environment.set('token', data.token); }",
+                  "if (data.role) { pm.environment.set('role', data.role); }"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Yêu cầu OTP quên mật khẩu",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/quen-mat-khau/otp",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "quen-mat-khau",
+                "otp"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{admin_email}}\"\n}"
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('OTP quên mật khẩu (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Đặt lại mật khẩu bằng OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/quen-mat-khau/dat-mat-khau",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "quen-mat-khau",
+                "dat-mat-khau"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{admin_email}}\",\n  \"otp\": \"{{otp_code}}\",\n  \"matKhauMoi\": \"{{new_password}}\",\n  \"xacNhanMatKhau\": \"{{new_password_confirm}}\"\n}"
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Đặt lại mật khẩu (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "disabled": true
+        }
+      ]
+    },
+    {
+      "name": "Người dùng",
+      "item": [
+        {
+          "name": "Danh sách người dùng",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/nguoi-dung/tat-ca",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "nguoi-dung",
+                "tat-ca"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Danh sach nguoi dung 200', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "const data = pm.response.json();",
+                  "if (data.users) {",
+                  "  const targetEmail = pm.environment.get('register_email');",
+                  "  const managed = data.users.find(u => u.email === targetEmail);",
+                  "  if (managed) { pm.environment.set('managed_user_id', managed.id); }",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Thông tin người dùng hiện tại",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/nguoi-dung/current",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "nguoi-dung",
+                "current"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Current user (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "const data = pm.response.json();",
+                  "pm.expect(data).to.have.property('email');"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Đổi mật khẩu",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/nguoi-dung/doi-mat-khau",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "nguoi-dung",
+                "doi-mat-khau"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"matKhauCu\": \"{{old_password}}\",\n  \"matKhauMoi\": \"{{new_password}}\",\n  \"xacNhanMatKhau\": \"{{new_password_confirm}}\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Đổi mật khẩu (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Lấy người dùng theo ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/nguoi-dung/{{managed_user_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "nguoi-dung",
+                "{{managed_user_id}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Lấy người dùng (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Cập nhật người dùng",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/nguoi-dung/cap-nhat/{{managed_user_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "nguoi-dung",
+                "cap-nhat",
+                "{{managed_user_id}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"{{update_user_full_name}}\",\n  \"role\": \"{{update_user_role}}\",\n  \"trangThai\": \"{{update_user_status}}\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Cập nhật người dùng (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Xóa người dùng",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/nguoi-dung/xoa/{{managed_user_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "nguoi-dung",
+                "xoa",
+                "{{managed_user_id}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Xóa người dùng (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Danh sách backup",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/backup/danh-sach",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "backup",
+                "danh-sach"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Danh sách backup (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "disabled": true
+        },
+        {
+          "name": "Xuất backup",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/backup/xuat",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "backup",
+                "xuat"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Xuất backup (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "disabled": true
+        },
+        {
+          "name": "Tải backup",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/backup/tai/{{backup_file_name}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "backup",
+                "tai",
+                "{{backup_file_name}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Tải backup (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "disabled": true
+        },
+        {
+          "name": "Khôi phục backup",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/backup/khoi-phuc",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "backup",
+                "khoi-phuc"
+              ]
+            },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "{{backup_file_path}}"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Khôi phục backup (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "disabled": true
+        },
+        {
+          "name": "Seed dữ liệu demo",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/seed/demo?force=%7B%7Bseed_force%7D%7D",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "seed",
+                "demo"
+              ],
+              "query": [
+                {
+                  "key": "force",
+                  "value": "{{seed_force}}"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Seed demo (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "disabled": true
+        }
+      ]
+    },
+    {
+      "name": "Danh mục",
+      "item": [
+        {
+          "name": "Tạo danh mục",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/danh-muc/them",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "danh-muc",
+                "them"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"{{category_name}}\",\n  \"description\": \"{{category_description}}\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Tạo danh mục (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Tất cả danh mục",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/danh-muc/tat-ca",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "danh-muc",
+                "tat-ca"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Danh mục tất cả (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Danh mục theo ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/danh-muc/{{category_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "danh-muc",
+                "{{category_id}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Danh mục theo ID (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Cập nhật danh mục",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/danh-muc/cap-nhat/{{category_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "danh-muc",
+                "cap-nhat",
+                "{{category_id}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"{{category_name}}\",\n  \"description\": \"{{category_description}}\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Cập nhật danh mục (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Xóa danh mục",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/danh-muc/xoa/{{category_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "danh-muc",
+                "xoa",
+                "{{category_id}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Xóa danh mục (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Sản phẩm",
+      "item": [
+        {
+          "name": "Thêm sản phẩm",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/san-pham/them",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "san-pham",
+                "them"
+              ]
+            },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "tenSanPham",
+                  "value": "{{product_name}}",
+                  "type": "text"
+                },
+                {
+                  "key": "sku",
+                  "value": "{{product_sku}}",
+                  "type": "text"
+                },
+                {
+                  "key": "giaNhap",
+                  "value": "{{product_cost}}",
+                  "type": "text"
+                },
+                {
+                  "key": "giaBan",
+                  "value": "{{product_price}}",
+                  "type": "text"
+                },
+                {
+                  "key": "soLuong",
+                  "value": "{{product_quantity}}",
+                  "type": "text"
+                },
+                {
+                  "key": "danhMucId",
+                  "value": "{{category_id}}",
+                  "type": "text"
+                },
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": "{{product_image_path}}"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Thêm sản phẩm (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "disabled": true
+        },
+        {
+          "name": "Cập nhật sản phẩm",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/san-pham/cap-nhat",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "san-pham",
+                "cap-nhat"
+              ]
+            },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "productId",
+                  "value": "{{product_id}}",
+                  "type": "text"
+                },
+                {
+                  "key": "tenSanPham",
+                  "value": "{{product_name}}",
+                  "type": "text"
+                },
+                {
+                  "key": "giaBan",
+                  "value": "{{product_price}}",
+                  "type": "text"
+                },
+                {
+                  "key": "giaNhap",
+                  "value": "{{product_cost}}",
+                  "type": "text"
+                },
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": "{{product_image_path}}"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Cập nhật sản phẩm (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "disabled": true
+        },
+        {
+          "name": "Danh sách sản phẩm",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/san-pham/tat-ca",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "san-pham",
+                "tat-ca"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Danh sách sản phẩm (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Sản phẩm theo ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/san-pham/{{product_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "san-pham",
+                "{{product_id}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Sản phẩm theo ID (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Tìm kiếm sản phẩm",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/san-pham/tim-kiem?input=%7B%7Bproduct_search%7D%7D",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "san-pham",
+                "tim-kiem"
+              ],
+              "query": [
+                {
+                  "key": "input",
+                  "value": "{{product_search}}"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Tìm kiếm sản phẩm (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Xóa sản phẩm",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/san-pham/xoa/{{product_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "san-pham",
+                "xoa",
+                "{{product_id}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Xóa sản phẩm (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "disabled": true
+        },
+        {
+          "name": "Phân trang sản phẩm",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/san-pham/phan-trang?page=%7B%7Bpage%7D%7D&size=%7B%7Bsize%7D%7D&keyword=%7B%7Bproduct_search%7D%7D&categoryId=%7B%7Bcategory_id%7D%7D",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "san-pham",
+                "phan-trang"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "{{page}}"
+                },
+                {
+                  "key": "size",
+                  "value": "{{size}}"
+                },
+                {
+                  "key": "keyword",
+                  "value": "{{product_search}}"
+                },
+                {
+                  "key": "categoryId",
+                  "value": "{{category_id}}"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Phân trang sản phẩm (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Sản phẩm sắp hết hàng",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/san-pham/sap-het-hang",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "san-pham",
+                "sap-het-hang"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Sắp hết hàng (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Sản phẩm theo SKU",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/san-pham/ma-vach/{{product_sku}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "san-pham",
+                "ma-vach",
+                "{{product_sku}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Sản phẩm theo SKU (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Sản phẩm hết hạn",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/san-pham/het-han",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "san-pham",
+                "het-han"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Sản phẩm hết hạn (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Nhà cung cấp",
+      "item": [
+        {
+          "name": "Thêm nhà cung cấp",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/nha-cung-cap/them",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "nha-cung-cap",
+                "them"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"{{supplier_name}}\",\n  \"contactInfo\": \"{{supplier_contact}}\",\n  \"phone\": \"{{supplier_phone}}\",\n  \"email\": \"{{supplier_email}}\",\n  \"address\": \"{{supplier_address}}\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Thêm NCC (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Danh sách nhà cung cấp",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/nha-cung-cap/tat-ca",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "nha-cung-cap",
+                "tat-ca"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Danh sách NCC (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Nhà cung cấp theo ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/nha-cung-cap/{{supplier_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "nha-cung-cap",
+                "{{supplier_id}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('NCC theo ID (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Cập nhật nhà cung cấp",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/nha-cung-cap/cap-nhat/{{supplier_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "nha-cung-cap",
+                "cap-nhat",
+                "{{supplier_id}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"{{supplier_name}}\",\n  \"contactInfo\": \"{{supplier_contact}}\",\n  \"phone\": \"{{supplier_phone}}\",\n  \"email\": \"{{supplier_email}}\",\n  \"address\": \"{{supplier_address}}\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Cập nhật NCC (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Xóa nhà cung cấp",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/nha-cung-cap/xoa/{{supplier_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "nha-cung-cap",
+                "xoa",
+                "{{supplier_id}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Xóa NCC (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "disabled": true
+        }
+      ]
+    },
+    {
+      "name": "Khách hàng",
+      "item": [
+        {
+          "name": "Danh sách khách hàng",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/khach-hang/all",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "khach-hang",
+                "all"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Danh sách khách (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Tạo khách hàng",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/khach-hang/add",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "khach-hang",
+                "add"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"{{customer_name}}\",\n  \"email\": \"{{customer_email}}\",\n  \"phone\": \"{{customer_phone}}\",\n  \"address\": \"{{customer_address}}\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Tạo khách hàng (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Cập nhật khách hàng",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/khach-hang/update/{{customer_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "khach-hang",
+                "update",
+                "{{customer_id}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"{{customer_name}}\",\n  \"email\": \"{{customer_email}}\",\n  \"phone\": \"{{customer_phone}}\",\n  \"address\": \"{{customer_address}}\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Cập nhật khách hàng (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Xóa khách hàng",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/khach-hang/delete/{{customer_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "khach-hang",
+                "delete",
+                "{{customer_id}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Xóa khách hàng (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "disabled": true
+        },
+        {
+          "name": "Chi tiết khách hàng",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/khach-hang/chi-tiet/{{customer_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "khach-hang",
+                "chi-tiet",
+                "{{customer_id}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Chi tiết khách hàng (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Kho & Kiểm kê",
+      "item": [
+        {
+          "name": "Tạo kho",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/kho/them?name=%7B%7Bwarehouse_name%7D%7D&address=%7B%7Bwarehouse_address%7D%7D&manager=%7B%7Bwarehouse_manager%7D%7D",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "kho",
+                "them"
+              ],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "{{warehouse_name}}"
+                },
+                {
+                  "key": "address",
+                  "value": "{{warehouse_address}}"
+                },
+                {
+                  "key": "manager",
+                  "value": "{{warehouse_manager}}"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Tạo kho (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Danh sách kho",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/kho/tat-ca",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "kho",
+                "tat-ca"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Danh sách kho (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Chuyển kho",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/kho/chuyen-kho?sanPhamId=%7B%7Bproduct_id%7D%7D&fromWarehouseId=%7B%7Bfrom_warehouse_id%7D%7D&toWarehouseId=%7B%7Bto_warehouse_id%7D%7D&quantity=%7B%7Btransfer_quantity%7D%7D",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "kho",
+                "chuyen-kho"
+              ],
+              "query": [
+                {
+                  "key": "sanPhamId",
+                  "value": "{{product_id}}"
+                },
+                {
+                  "key": "fromWarehouseId",
+                  "value": "{{from_warehouse_id}}"
+                },
+                {
+                  "key": "toWarehouseId",
+                  "value": "{{to_warehouse_id}}"
+                },
+                {
+                  "key": "quantity",
+                  "value": "{{transfer_quantity}}"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Chuyển kho (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Tồn kho",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/kho/ton-kho?sanPhamId=%7B%7Bproduct_id%7D%7D&khoId=%7B%7Bwarehouse_id%7D%7D",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "kho",
+                "ton-kho"
+              ],
+              "query": [
+                {
+                  "key": "sanPhamId",
+                  "value": "{{product_id}}"
+                },
+                {
+                  "key": "khoId",
+                  "value": "{{warehouse_id}}"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Tồn kho (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Thống kê kho",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/kho/thong-ke",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "kho",
+                "thong-ke"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Thống kê kho (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Snapshot tồn kho",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/kiem-ke/hien-trang?sanPhamId=%7B%7Bproduct_id%7D%7D&khoId=%7B%7Bwarehouse_id%7D%7D",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "kiem-ke",
+                "hien-trang"
+              ],
+              "query": [
+                {
+                  "key": "sanPhamId",
+                  "value": "{{product_id}}"
+                },
+                {
+                  "key": "khoId",
+                  "value": "{{warehouse_id}}"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Snapshot tồn kho (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Thực hiện kiểm kê",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/kiem-ke/thuc-hien",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "kiem-ke",
+                "thuc-hien"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sanPhamId\": \"{{product_id}}\",\n  \"khoId\": \"{{warehouse_id}}\",\n  \"soLuongThucTe\": \"{{stocktake_quantity}}\",\n  \"ghiChu\": \"{{stocktake_note}}\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Thực hiện kiểm kê (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Lịch sử kiểm kê",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/kiem-ke/lich-su?sanPhamId=%7B%7Bproduct_id%7D%7D&khoId=%7B%7Bwarehouse_id%7D%7D&page=%7B%7Bpage%7D%7D&size=%7B%7Bsize%7D%7D",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "kiem-ke",
+                "lich-su"
+              ],
+              "query": [
+                {
+                  "key": "sanPhamId",
+                  "value": "{{product_id}}"
+                },
+                {
+                  "key": "khoId",
+                  "value": "{{warehouse_id}}"
+                },
+                {
+                  "key": "page",
+                  "value": "{{page}}"
+                },
+                {
+                  "key": "size",
+                  "value": "{{size}}"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Lịch sử kiểm kê (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Giao dịch",
+      "item": [
+        {
+          "name": "Nhập hàng",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/giao-dich/nhap",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "giao-dich",
+                "nhap"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sanPhamId\": \"{{product_id}}\",\n  \"soLuong\": \"{{transaction_quantity}}\",\n  \"nhaCungCapId\": \"{{supplier_id}}\",\n  \"khoId\": \"{{warehouse_id}}\",\n  \"moTa\": \"{{transaction_description}}\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Nhập hàng (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Bán hàng",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/giao-dich/ban",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "giao-dich",
+                "ban"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sanPhamId\": \"{{product_id}}\",\n  \"soLuong\": \"{{transaction_quantity}}\",\n  \"khachHangId\": \"{{customer_id}}\",\n  \"khoId\": \"{{warehouse_id}}\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Bán hàng (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Khách trả hàng",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/giao-dich/khach-tra",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "giao-dich",
+                "khach-tra"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sanPhamId\": \"{{product_id}}\",\n  \"soLuong\": \"{{transaction_quantity}}\",\n  \"customerId\": \"{{customer_id}}\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Khách trả (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Trả nhà cung cấp",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/giao-dich/tra-nha-cung-cap",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "giao-dich",
+                "tra-nha-cung-cap"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sanPhamId\": \"{{product_id}}\",\n  \"soLuong\": \"{{transaction_quantity}}\",\n  \"nhaCungCapId\": \"{{supplier_id}}\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Trả NCC (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Danh sách giao dịch",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/giao-dich/tat-ca?filter=%7B%7Btransaction_filter%7D%7D",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "giao-dich",
+                "tat-ca"
+              ],
+              "query": [
+                {
+                  "key": "filter",
+                  "value": "{{transaction_filter}}"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Danh sách giao dịch (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Giao dịch theo tháng/năm",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/giao-dich/theo-thang-nam?month=%7B%7Bmonth%7D%7D&year=%7B%7Byear%7D%7D",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "giao-dich",
+                "theo-thang-nam"
+              ],
+              "query": [
+                {
+                  "key": "month",
+                  "value": "{{month}}"
+                },
+                {
+                  "key": "year",
+                  "value": "{{year}}"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Giao dịch tháng/năm (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Giao dịch theo ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/giao-dich/{{transaction_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "giao-dich",
+                "{{transaction_id}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Giao dịch theo ID (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Cập nhật trạng thái giao dịch",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/giao-dich/cap-nhat-trang-thai/{{transaction_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "giao-dich",
+                "cap-nhat-trang-thai",
+                "{{transaction_id}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "\"{{transaction_status}}\""
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Cập nhật trạng thái (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Báo cáo",
+      "item": [
+        {
+          "name": "Tổng quan dashboard",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/dashboard/tong-quan?year=%7B%7Byear%7D%7D&month=%7B%7Bmonth%7D%7D&lowLimit=%7B%7Blow_limit%7D%7D",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "dashboard",
+                "tong-quan"
+              ],
+              "query": [
+                {
+                  "key": "year",
+                  "value": "{{year}}"
+                },
+                {
+                  "key": "month",
+                  "value": "{{month}}"
+                },
+                {
+                  "key": "lowLimit",
+                  "value": "{{low_limit}}"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Dashboard tổng quan (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Giá trị tồn tổng",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/bao-cao/gia-tri-ton/tong",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "bao-cao",
+                "gia-tri-ton",
+                "tong"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Giá trị tồn tổng (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Giá trị tồn theo danh mục",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/bao-cao/gia-tri-ton/danh-muc",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "bao-cao",
+                "gia-tri-ton",
+                "danh-muc"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Giá trị tồn danh mục (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Giá trị tồn theo kho",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/bao-cao/gia-tri-ton/kho",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "bao-cao",
+                "gia-tri-ton",
+                "kho"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Giá trị tồn kho (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Báo cáo xuất nhập tồn",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/bao-cao/xuat-nhap-ton?tuNgay=%7B%7Bfrom_date%7D%7D&denNgay=%7B%7Bto_date%7D%7D&danhMucId=%7B%7Bcategory_id%7D%7D",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "bao-cao",
+                "xuat-nhap-ton"
+              ],
+              "query": [
+                {
+                  "key": "tuNgay",
+                  "value": "{{from_date}}"
+                },
+                {
+                  "key": "denNgay",
+                  "value": "{{to_date}}"
+                },
+                {
+                  "key": "danhMucId",
+                  "value": "{{category_id}}"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Xuất nhập tồn (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Báo cáo hàng tồn lâu",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/bao-cao/hang-ton-lau?minDays=%7B%7Bmin_days%7D%7D",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "bao-cao",
+                "hang-ton-lau"
+              ],
+              "query": [
+                {
+                  "key": "minDays",
+                  "value": "{{min_days}}"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Hàng tồn lâu (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Báo cáo ABC",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/bao-cao/abc?tuNgay=%7B%7Bfrom_date%7D%7D&denNgay=%7B%7Bto_date%7D%7D",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "bao-cao",
+                "abc"
+              ],
+              "query": [
+                {
+                  "key": "tuNgay",
+                  "value": "{{from_date}}"
+                },
+                {
+                  "key": "denNgay",
+                  "value": "{{to_date}}"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('ABC (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Sản phẩm bán chạy",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/bao-cao/san-pham-ban-chay?limit=%7B%7Bbest_seller_limit%7D%7D&metric=%7B%7Bbest_seller_metric%7D%7D&tuNgay=%7B%7Bfrom_date%7D%7D&denNgay=%7B%7Bto_date%7D%7D",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "bao-cao",
+                "san-pham-ban-chay"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "{{best_seller_limit}}"
+                },
+                {
+                  "key": "metric",
+                  "value": "{{best_seller_metric}}"
+                },
+                {
+                  "key": "tuNgay",
+                  "value": "{{from_date}}"
+                },
+                {
+                  "key": "denNgay",
+                  "value": "{{to_date}}"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Sản phẩm bán chạy (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Báo cáo doanh thu lợi nhuận",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/bao-cao/doanh-thu-loi-nhuan?interval=%7B%7Brevenue_interval%7D%7D&tuNgay=%7B%7Bfrom_date%7D%7D&denNgay=%7B%7Bto_date%7D%7D",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "bao-cao",
+                "doanh-thu-loi-nhuan"
+              ],
+              "query": [
+                {
+                  "key": "interval",
+                  "value": "{{revenue_interval}}"
+                },
+                {
+                  "key": "tuNgay",
+                  "value": "{{from_date}}"
+                },
+                {
+                  "key": "denNgay",
+                  "value": "{{to_date}}"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Doanh thu lợi nhuận (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Báo cáo nhà cung cấp",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/bao-cao/nha-cung-cap?limit=%7B%7Bsupplier_limit%7D%7D&tuNgay=%7B%7Bfrom_date%7D%7D&denNgay=%7B%7Bto_date%7D%7D",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "bao-cao",
+                "nha-cung-cap"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "{{supplier_limit}}"
+                },
+                {
+                  "key": "tuNgay",
+                  "value": "{{from_date}}"
+                },
+                {
+                  "key": "denNgay",
+                  "value": "{{to_date}}"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Báo cáo NCC (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Đơn đặt hàng",
+      "item": [
+        {
+          "name": "Danh sách đơn đặt hàng",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/don-dat-hang?page={{page}}&size={{size}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "don-dat-hang"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "{{page}}"
+                },
+                {
+                  "key": "size",
+                  "value": "{{size}}"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('DS đơn đặt hàng (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Tạo đơn đặt hàng",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/don-dat-hang",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "don-dat-hang"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nhaCungCapId\": \"{{supplier_id}}\",\n  \"items\": [\n    {\n      \"sanPhamId\": \"{{product_id}}\",\n      \"soLuong\": \"{{po_quantity}}\",\n      \"donGia\": \"{{product_cost}}\"\n    }\n  ],\n  \"ghiChu\": \"{{po_note}}\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Tao don dat hang 200', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "const data = pm.response.json();",
+                  "if (data.donDatHang) {",
+                  "  pm.environment.set('purchase_order_id', data.donDatHang.id);",
+                  "  if (Array.isArray(data.donDatHang.chiTiets) && data.donDatHang.chiTiets.length > 0) {",
+                  "    pm.environment.set('purchase_order_detail_id', data.donDatHang.chiTiets[0].id);",
+                  "  }",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Chi tiết đơn đặt hàng",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/don-dat-hang/{{purchase_order_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "don-dat-hang",
+                "{{purchase_order_id}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Chi tiết PO (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Cập nhật trạng thái đơn đặt hàng",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/don-dat-hang/{{purchase_order_id}}/trang-thai",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "don-dat-hang",
+                "{{purchase_order_id}}",
+                "{{purchase_order_id}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"trangThai\": \"{{purchase_status_update}}\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Cập nhật trạng thái PO (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Nhận hàng đơn đặt",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/don-dat-hang/{{purchase_order_id}}/nhan-hang",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "don-dat-hang",
+                "{{purchase_order_id}}",
+                "{{purchase_order_id}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ghiChu\": \"{{po_note}}\",\n  \"items\": [\n    {\n      \"chiTietId\": \"{{purchase_order_detail_id}}\",\n      \"soLuongNhan\": \"{{po_receive_quantity}}\",\n      \"khoId\": \"{{warehouse_id}}\",\n      \"soLo\": \"{{lot_number}}\",\n      \"ngayNhap\": \"{{receive_date}}\",\n      \"hanSuDung\": \"{{lot_expiry_date}}\"\n    }\n  ]\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Nhận hàng PO (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Đơn bán hàng",
+      "item": [
+        {
+          "name": "Danh sách đơn bán",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/don-ban-hang?page={{page}}&size={{size}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "don-ban-hang"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "{{page}}"
+                },
+                {
+                  "key": "size",
+                  "value": "{{size}}"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('DS đơn bán (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Tạo đơn bán",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/don-ban-hang",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "don-ban-hang"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"khachHangId\": \"{{customer_id}}\",\n  \"items\": [\n    {\n      \"sanPhamId\": \"{{product_id}}\",\n      \"soLuong\": \"{{sales_quantity}}\",\n      \"donGia\": \"{{product_price}}\"\n    }\n  ],\n  \"ghiChu\": \"{{sales_note}}\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Tao don ban hang 200', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "const data = pm.response.json();",
+                  "if (data.donBanHang) {",
+                  "  pm.environment.set('sales_order_id', data.donBanHang.id);",
+                  "  if (Array.isArray(data.donBanHang.chiTiets) && data.donBanHang.chiTiets.length > 0) {",
+                  "    pm.environment.set('sales_order_detail_id', data.donBanHang.chiTiets[0].id);",
+                  "  }",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Chi tiết đơn bán",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/don-ban-hang/{{sales_order_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "don-ban-hang",
+                "{{sales_order_id}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Chi tiết đơn bán (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Cập nhật trạng thái đơn bán",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/don-ban-hang/{{sales_order_id}}/trang-thai",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "don-ban-hang",
+                "{{sales_order_id}}",
+                "{{sales_order_id}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"trangThai\": \"{{sales_status_update}}\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Cập nhật trạng thái đơn bán (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Tệp & Báo cáo phụ trợ",
+      "item": [
+        {
+          "name": "Xuất Excel sản phẩm",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/xuat-excel/san-pham",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "xuat-excel",
+                "san-pham"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Xuất Excel sản phẩm (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Xuất Excel giao dịch",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/xuat-excel/giao-dich?tuNgay=%7B%7Bfrom_date%7D%7D&denNgay=%7B%7Bto_date%7D%7D",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "xuat-excel",
+                "giao-dich"
+              ],
+              "query": [
+                {
+                  "key": "tuNgay",
+                  "value": "{{from_date}}"
+                },
+                {
+                  "key": "denNgay",
+                  "value": "{{to_date}}"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Xuất Excel giao dịch (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Xuất PDF hóa đơn giao dịch",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/xuat-pdf/hoa-don-giao-dich/{{transaction_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "xuat-pdf",
+                "hoa-don-giao-dich",
+                "{{transaction_id}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Xuất PDF giao dịch (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Nhập Excel sản phẩm",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/nhap-excel/san-pham",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "nhap-excel",
+                "san-pham"
+              ]
+            },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "{{products_excel_path}}"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Nhập Excel sản phẩm (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "disabled": true
+        },
+        {
+          "name": "Barcode hình ảnh",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/barcode/{{barcode_sku}}.png?type=%7B%7Bbarcode_type%7D%7D",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "barcode",
+                "{{barcode_sku}}.png"
+              ],
+              "query": [
+                {
+                  "key": "type",
+                  "value": "{{barcode_type}}"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Barcode PNG (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Barcode PDF",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/barcode/tem.pdf?sku=%7B%7Bbarcode_sku%7D%7D&quantity=%7B%7Bbarcode_quantity%7D%7D&type=%7B%7Bbarcode_type%7D%7D",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "barcode",
+                "tem.pdf"
+              ],
+              "query": [
+                {
+                  "key": "sku",
+                  "value": "{{barcode_sku}}"
+                },
+                {
+                  "key": "quantity",
+                  "value": "{{barcode_quantity}}"
+                },
+                {
+                  "key": "type",
+                  "value": "{{barcode_type}}"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Barcode PDF (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Lô hàng sắp hết hạn",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/lo-hang/sap-het-han?days=%7B%7Bexpiring_days%7D%7D",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "lo-hang",
+                "sap-het-han"
+              ],
+              "query": [
+                {
+                  "key": "days",
+                  "value": "{{expiring_days}}"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Lô sắp hết hạn (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Lô hàng hết hạn",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/lo-hang/het-han",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "lo-hang",
+                "het-han"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Lô hết hạn (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Hủy lô hàng",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/lo-hang/huy/{{lot_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "lo-hang",
+                "huy",
+                "{{lot_id}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Hủy lô (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Nhật ký",
+      "item": [
+        {
+          "name": "Nhật ký hệ thống",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/nhat-ky?page=%7B%7Bpage%7D%7D&size=%7B%7Bsize%7D%7D&module=%7B%7Baudit_module%7D%7D&hanhDong=%7B%7Baudit_action%7D%7D&userId=%7B%7Buser_id%7D%7D&doiTuongLoai=%7B%7Baudit_object_type%7D%7D&doiTuongId=%7B%7Baudit_object_id%7D%7D&tuNgay=%7B%7Bfrom_date%7D%7D&denNgay=%7B%7Bto_date%7D%7D",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "nhat-ky"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "{{page}}"
+                },
+                {
+                  "key": "size",
+                  "value": "{{size}}"
+                },
+                {
+                  "key": "module",
+                  "value": "{{audit_module}}"
+                },
+                {
+                  "key": "hanhDong",
+                  "value": "{{audit_action}}"
+                },
+                {
+                  "key": "userId",
+                  "value": "{{managed_user_id}}"
+                },
+                {
+                  "key": "doiTuongLoai",
+                  "value": "{{audit_object_type}}"
+                },
+                {
+                  "key": "doiTuongId",
+                  "value": "{{audit_object_id}}"
+                },
+                {
+                  "key": "tuNgay",
+                  "value": "{{from_date}}"
+                },
+                {
+                  "key": "denNgay",
+                  "value": "{{to_date}}"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Nhật ký (200)', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
