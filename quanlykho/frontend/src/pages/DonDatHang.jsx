@@ -8,13 +8,16 @@ import React, {
 import Layout from "../component/Layout";
 import ApiService from "../service/ApiService";
 
+// Trạng thái đơn đặt hàng + chi tiết (enum TrangThaiDonDatHang, TrangThaiChiTietDonDat)
 const STATUS_LABELS = {
-  NHAP: "Nháp",
+  NHAP: "Nhập",
   CHO_DUYET: "Chờ duyệt",
   DA_DUYET: "Đã duyệt",
   DANG_GIAO: "Đang giao",
   HOAN_THANH: "Hoàn thành",
   DA_HUY: "Đã hủy",
+  CHO_NHAN: "Chờ nhận",
+  DANG_NHAN: "Đang nhận",
 };
 
 const STATUS_TRANSITIONS = {
@@ -89,6 +92,19 @@ const DonDatHang = () => {
     };
   }, []);
 
+  const handleAuthError = useCallback(
+    (error) => {
+      if (error?.response?.status === 401) {
+        ApiService.logout();
+        showMessage("Phiên đăng nhập hết hạn, vui lòng đăng nhập lại");
+        window.location.href = "/dang-nhap";
+        return true;
+      }
+      return false;
+    },
+    [showMessage]
+  );
+
   const loadOrders = useCallback(async () => {
     setLoading(true);
     try {
@@ -104,15 +120,17 @@ const DonDatHang = () => {
         showMessage(response.message || "Không thể tải danh sách đơn đặt hàng");
       }
     } catch (error) {
-      showMessage(
-        error.response?.data?.message ||
-          "Không thể tải danh sách đơn đặt hàng: " +
-            (error.message || error.toString())
-      );
+      if (!handleAuthError(error)) {
+        showMessage(
+          error.response?.data?.message ||
+            "Không thể tải danh sách đơn đặt hàng: " +
+              (error.message || error.toString())
+        );
+      }
     } finally {
       setLoading(false);
     }
-  }, [page, statusFilter, showMessage]);
+  }, [page, statusFilter, handleAuthError, showMessage]);
 
   useEffect(() => {
     loadOrders();
@@ -136,15 +154,17 @@ const DonDatHang = () => {
           setWarehouses(warehouseRes.khos || []);
         }
       } catch (error) {
-        showMessage(
-          error.response?.data?.message ||
-            "Không thể tải dữ liệu tham chiếu: " +
-              (error.message || error.toString())
-        );
+        if (!handleAuthError(error)) {
+          showMessage(
+            error.response?.data?.message ||
+              "Không thể tải dữ liệu tham chiếu: " +
+                (error.message || error.toString())
+          );
+        }
       }
     };
     loadReferences();
-  }, [showMessage]);
+  }, [handleAuthError, showMessage]);
 
   const remainingDetails = useMemo(() => {
     if (!selectedOrder?.chiTiets) return [];
@@ -243,10 +263,13 @@ const DonDatHang = () => {
       resetForm();
       loadOrders();
     } catch (error) {
-      showMessage(
-        error.response?.data?.message ||
-          "Không thể tạo đơn đặt hàng: " + (error.message || error.toString())
-      );
+      if (!handleAuthError(error)) {
+        showMessage(
+          error.response?.data?.message ||
+            "Không thể tạo đơn đặt hàng: " +
+              (error.message || error.toString())
+        );
+      }
     }
   };
 
@@ -259,10 +282,12 @@ const DonDatHang = () => {
         showMessage(response.message || "Không thể tải chi tiết đơn");
       }
     } catch (error) {
-      showMessage(
-        error.response?.data?.message ||
-          "Không thể tải chi tiết đơn: " + (error.message || error.toString())
-      );
+      if (!handleAuthError(error)) {
+        showMessage(
+          error.response?.data?.message ||
+            "Không thể tải chi tiết đơn: " + (error.message || error.toString())
+        );
+      }
     }
   };
 
@@ -283,11 +308,13 @@ const DonDatHang = () => {
         openDetail(orderId);
       }
     } catch (error) {
-      showMessage(
-        error.response?.data?.message ||
-          "Không thể cập nhật trạng thái: " +
-            (error.message || error.toString())
-      );
+      if (!handleAuthError(error)) {
+        showMessage(
+          error.response?.data?.message ||
+            "Không thể cập nhật trạng thái: " +
+              (error.message || error.toString())
+        );
+      }
     }
   };
 
@@ -341,11 +368,13 @@ const DonDatHang = () => {
       openDetail(selectedOrder.id);
       loadOrders();
     } catch (error) {
-      showMessage(
-        error.response?.data?.message ||
-          "Không thể cập nhật nhận hàng: " +
-            (error.message || error.toString())
-      );
+      if (!handleAuthError(error)) {
+        showMessage(
+          error.response?.data?.message ||
+            "Không thể cập nhật nhận hàng: " +
+              (error.message || error.toString())
+        );
+      }
     }
   };
 

@@ -2,31 +2,34 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import Layout from "../component/Layout";
 import ApiService from "../service/ApiService";
 
+// Trạng thái đơn bán hàng (enum TrangThaiDonBanHang + chi tiết)
 const STATUS_LABELS = {
-  NHAP: "Nháp",
+  NHAP: "Nhập",
   XAC_NHAN: "Xác nhận",
   DONG_GOI: "Đóng gói",
   GIAO_HANG: "Giao hàng",
   HOAN_THANH: "Hoàn thành",
-  DA_Hủy: "Đã hủy",
+  DA_HUY: "Đã hủy",
+  CHO_XU_LY: "Chờ xử lý",
+  DANG_GIAO: "Đang giao",
 };
 
 const STATUS_TRANSITIONS = {
   NHAP: [
     { value: "XAC_NHAN", label: "Xác nhận" },
-    { value: "DA_Hủy", label: "Hủy" },
+    { value: "DA_HUY", label: "Hủy" },
   ],
   XAC_NHAN: [
-    { value: "DONG_GOI", label: "CHủyển đóng gói" },
-    { value: "DA_Hủy", label: "Hủy" },
+    { value: "DONG_GOI", label: "Chuyển đóng gói" },
+    { value: "DA_HUY", label: "Hủy" },
   ],
   DONG_GOI: [
     { value: "GIAO_HANG", label: "Đang giao" },
-    { value: "DA_Hủy", label: "Hủy" },
+    { value: "DA_HUY", label: "Hủy" },
   ],
   GIAO_HANG: [
     { value: "HOAN_THANH", label: "Hoàn thành" },
-    { value: "DA_Hủy", label: "Hủy" },
+    { value: "DA_HUY", label: "Hủy" },
   ],
 };
 
@@ -57,6 +60,19 @@ const DonBanHang = () => {
     setTimeout(() => setMessage(""), 4000);
   }, []);
 
+  const handleAuthError = useCallback(
+    (error) => {
+      if (error?.response?.status === 401) {
+        ApiService.logout();
+        showMessage("Phiên đăng nhập hết hạn, vui lòng đăng nhập lại");
+        window.location.href = "/dang-nhap";
+        return true;
+      }
+      return false;
+    },
+    [showMessage]
+  );
+
   const loadOrders = useCallback(async () => {
     setLoading(true);
     try {
@@ -73,13 +89,16 @@ const DonBanHang = () => {
         showMessage(response.message || "Không thể tải đơn bán hàng");
       }
     } catch (error) {
-      showMessage(
-        error.response?.data?.message || "Không thể tải đơn bán hàng: " + error
-      );
+      if (!handleAuthError(error)) {
+        showMessage(
+          error.response?.data?.message ||
+            "Không thể tải đơn bán hàng: " + error
+        );
+      }
     } finally {
       setLoading(false);
     }
-  }, [page, statusFilter, customerFilter, showMessage]);
+  }, [page, statusFilter, customerFilter, handleAuthError, showMessage]);
 
   useEffect(() => {
     loadOrders();
@@ -103,14 +122,16 @@ const DonBanHang = () => {
           setWarehouses(warehouseRes.khos || []);
         }
       } catch (error) {
-        showMessage(
-          error.response?.data?.message ||
-            "Không thể tải dữ liệu tham chiếu: " + error
-        );
+        if (!handleAuthError(error)) {
+          showMessage(
+            error.response?.data?.message ||
+              "Không thể tải dữ liệu tham chiếu: " + error
+          );
+        }
       }
     };
     loadReferences();
-  }, [showMessage]);
+  }, [handleAuthError, showMessage]);
 
   const handleFormChange = (event) => {
     const { name, value } = event.target;
@@ -174,24 +195,26 @@ const DonBanHang = () => {
     };
 
     if (!payload.khachHangId) {
-      showMessage("Vui long Chọn khách hàng");
+      showMessage("Vui lòng chọn khách hàng");
       return;
     }
     if (payload.items.length === 0) {
-      showMessage("Vui long them it nhat 1 san pham");
+      showMessage("Vui lòng thêm ít nhất 1 sản phẩm");
       return;
     }
 
     try {
       await ApiService.createSalesOrder(payload);
-      showMessage("Tạo đơn bán hàng thanh cong");
+      showMessage("Tạo đơn bán hàng thành công");
       resetForm();
       loadOrders();
     } catch (error) {
-      showMessage(
-        error.response?.data?.message ||
-          "Không thể tạo đơn bán hàng: " + error
-      );
+      if (!handleAuthError(error)) {
+        showMessage(
+          error.response?.data?.message ||
+            "Không thể tạo đơn bán hàng: " + error
+        );
+      }
     }
   };
 
@@ -204,9 +227,11 @@ const DonBanHang = () => {
         showMessage(response.message || "Không thể tải chi tiết");
       }
     } catch (error) {
-      showMessage(
-        error.response?.data?.message || "Không thể tải chi tiết: " + error
-      );
+      if (!handleAuthError(error)) {
+        showMessage(
+          error.response?.data?.message || "Không thể tải chi tiết: " + error
+        );
+      }
     }
   };
 
@@ -217,16 +242,18 @@ const DonBanHang = () => {
   const handleUpdateStatus = async (orderId, nextStatus) => {
     try {
       await ApiService.updateSalesOrderStatus(orderId, nextStatus);
-      showMessage("Cap nhat Trạng thái thanh cong");
+      showMessage("Cập nhật trạng thái thành công");
       loadOrders();
       if (selectedOrder?.id === orderId) {
         openDetail(orderId);
       }
     } catch (error) {
-      showMessage(
-        error.response?.data?.message ||
-          "Không thể cập nhật Trạng thái: " + error
-      );
+      if (!handleAuthError(error)) {
+        showMessage(
+          error.response?.data?.message ||
+            "Không thể cập nhật trạng thái: " + error
+        );
+      }
     }
   };
 
@@ -241,27 +268,32 @@ const DonBanHang = () => {
   }, [selectedOrder]);
 
   const canShowActions = (status) =>
-    STATUS_TRANSITIONS[status] && STATUS_TRANSITIONS[status].length > 0;
+    Array.isArray(STATUS_TRANSITIONS[status]) &&
+    STATUS_TRANSITIONS[status].length > 0;
 
   const formatCurrency = (value) => {
     if (value === null || value === undefined) return "0 VND";
     const number = Number(value);
     if (Number.isNaN(number)) return "0 VND";
-    return (
-      new Intl.NumberFormat("en-US").format(Math.round(number)) + " VND"
-    );
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+      maximumFractionDigits: 0,
+    }).format(Math.round(number));
   };
 
   const formatDate = (value) => {
     if (!value) return "--";
     const date = new Date(value);
     if (Number.isNaN(date.getTime())) return "--";
-    return date.toLocaleDateString();
+    return date.toLocaleDateString("vi-VN");
   };
 
   const printInvoice = () => {
     window.print();
   };
+
+  const getStatusLabel = (status) => STATUS_LABELS[status] || status || "--";
 
   return (
     <Layout>
@@ -271,7 +303,7 @@ const DonBanHang = () => {
         <div>
           <h1>Đơn bán hàng</h1>
           <p className="text-subtle">
-            Giu hang truoc, quan ly Trạng thái va in hoa Đơn bán hàng cho khach
+            Giữ hàng trước, quản lý trạng thái và in hóa đơn bán hàng cho khách
           </p>
         </div>
       </div>
@@ -297,7 +329,7 @@ const DonBanHang = () => {
               value={form.khoId}
               onChange={handleFormChange}
             >
-              <option value="">Chọn kho xuat</option>
+              <option value="">Chọn kho xuất</option>
               {warehouses.map((warehouse) => (
                 <option key={warehouse.id} value={warehouse.id}>
                   {warehouse.name}
@@ -419,25 +451,25 @@ const DonBanHang = () => {
           </label>
         </div>
         {loading ? (
-          <p className="empty-text">Dang tai...</p>
+          <p className="empty-text">Đang tải...</p>
         ) : (
           <table className="simple-table">
             <thead>
               <tr>
-                <th>Ma don</th>
+                <th>Mã đơn</th>
                 <th>Khách hàng</th>
-                <th>Kho xuat</th>
+                <th>Kho xuất</th>
                 <th>Trạng thái</th>
                 <th>Ngày giao dự kiến</th>
-                <th>Tong gia tri</th>
-                <th>Hanh dong</th>
+                <th>Tổng giá trị</th>
+                <th>Hành động</th>
               </tr>
             </thead>
             <tbody>
               {orders.length === 0 && (
                 <tr>
                   <td colSpan="7" className="empty-text">
-                    Chua co Đơn bán hàng
+                    Chưa có đơn bán hàng
                   </td>
                 </tr>
               )}
@@ -450,7 +482,7 @@ const DonBanHang = () => {
                     <span
                       className={`item-badge status-${order.trangThai?.toLowerCase()}`}
                     >
-                      {STATUS_LABELS[order.trangThai] || order.trangThai}
+                      {getStatusLabel(order.trangThai)}
                     </span>
                   </td>
                   <td>{formatDate(order.ngayGiaoDuKien)}</td>
@@ -464,7 +496,7 @@ const DonBanHang = () => {
                         <button
                           key={action.value}
                           className={
-                            action.value === "DA_Hủy" ? "danger" : ""
+                            action.value === "DA_HUY" ? "danger" : ""
                           }
                           onClick={() =>
                             handleUpdateStatus(order.id, action.value)
@@ -486,7 +518,7 @@ const DonBanHang = () => {
               disabled={page === 0}
               onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
             >
-              Prev
+              Trước
             </button>
             <span>
               Trang {page + 1} / {totalPages}
@@ -498,7 +530,7 @@ const DonBanHang = () => {
                 setPage((prev) => Math.min(prev + 1, totalPages - 1))
               }
             >
-              Next
+              Sau
             </button>
           </div>
         )}
@@ -511,9 +543,9 @@ const DonBanHang = () => {
               <h3>Chi tiết {selectedOrder.maDon}</h3>
               <div className="table-actions">
                 <button className="secondary" onClick={printInvoice}>
-                  In hoa don
+                  In hóa đơn
                 </button>
-                <button onClick={closeDetail}>Dong</button>
+                <button onClick={closeDetail}>Đóng</button>
               </div>
             </div>
             <div className="modal-body">
@@ -524,31 +556,28 @@ const DonBanHang = () => {
                 </div>
                 <div className="po-info-card">
                   <span>Trạng thái</span>
-                  <strong>
-                    {STATUS_LABELS[selectedOrder.trangThai] ||
-                      selectedOrder.trangThai}
-                  </strong>
+                  <strong>{getStatusLabel(selectedOrder.trangThai)}</strong>
                 </div>
                 <div className="po-info-card">
                   <span>Ngày giao dự kiến</span>
                   <strong>{formatDate(selectedOrder.ngayGiaoDuKien)}</strong>
                 </div>
                 <div className="po-info-card">
-                  <span>Tong gia tri</span>
+                  <span>Tổng giá trị</span>
                   <strong>{formatCurrency(selectedOrder.tongTien)}</strong>
                 </div>
               </div>
 
               <div className="po-detail-section">
-                <h4>Danh sach san pham</h4>
+                <h4>Danh sách sản phẩm</h4>
                 <div className="table-scroll">
                   <table className="simple-table">
                     <thead>
                       <tr>
-                        <th>San pham</th>
+                        <th>Sản phẩm</th>
                         <th>Số lượng</th>
                         <th>Đơn giá</th>
-                        <th>Thanh tien</th>
+                        <th>Thành tiền</th>
                         <th>Trạng thái</th>
                       </tr>
                     </thead>
@@ -566,8 +595,7 @@ const DonBanHang = () => {
                           </td>
                           <td>
                             {detail.trangThai
-                              ? STATUS_LABELS[detail.trangThai] ||
-                                detail.trangThai
+                              ? getStatusLabel(detail.trangThai)
                               : "--"}
                           </td>
                         </tr>
@@ -578,25 +606,25 @@ const DonBanHang = () => {
               </div>
 
               <div className="po-detail-section">
-                <h4>Hoa don</h4>
+                <h4>Hóa đơn</h4>
                 <div className="invoice-card">
                   <div className="invoice-header">
                     <div>
-                      <strong>Don: {selectedOrder.maDon}</strong>
-                      <p>Ngay: {formatDate(selectedOrder.createdAt)}</p>
+                      <strong>Đơn: {selectedOrder.maDon}</strong>
+                      <p>Ngày: {formatDate(selectedOrder.createdAt)}</p>
                     </div>
                     <div>
-                      <p>Khach: {selectedOrder.khachHang?.name || "--"}</p>
+                      <p>Khách: {selectedOrder.khachHang?.name || "--"}</p>
                       <p>SDT: {selectedOrder.khachHang?.phone || "--"}</p>
                     </div>
                   </div>
                   <table className="simple-table">
                     <thead>
                       <tr>
-                        <th>San pham</th>
+                        <th>Sản phẩm</th>
                         <th>Số lượng</th>
                         <th>Đơn giá</th>
-                        <th>Tong</th>
+                        <th>Tổng</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -610,10 +638,12 @@ const DonBanHang = () => {
                       ))}
                       <tr>
                         <td colSpan="3" style={{ textAlign: "right" }}>
-                          <strong>Tong cong</strong>
+                          <strong>Tổng cộng</strong>
                         </td>
                         <td>
-                          <strong>{formatCurrency(selectedOrder.tongTien)}</strong>
+                          <strong>
+                            {formatCurrency(selectedOrder.tongTien)}
+                          </strong>
                         </td>
                       </tr>
                     </tbody>
@@ -629,6 +659,3 @@ const DonBanHang = () => {
 };
 
 export default DonBanHang;
-
-
-
